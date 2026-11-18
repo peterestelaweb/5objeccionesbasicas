@@ -1,0 +1,46 @@
+name: Deploy by FTP
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Upload site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write deploy marker
+        run: |
+          printf 'commit=%s\nrun=%s\nbuilt_at=%s\n' \
+            '${{ github.sha }}' \
+            '${{ github.run_id }}' \
+            "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > public/deploy-marker.txt
+
+      - name: Deploy to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          protocol: ftps
+          local-dir: ./public/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          exclude: |
+            **/.DS_Store
+
+      - name: Verify public deploy
+        run: |
+          curl --fail --silent --show-error --location \
+            https://objeccionesbasicas.peterestela.com/deploy-marker.txt \
+            | tee /tmp/deploy-marker.txt
+          grep -F "${{ github.sha }}" /tmp/deploy-marker.txt
+          curl --fail --silent --show-error --location --compressed \
+            https://objeccionesbasicas.peterestela.com/ \
+            | grep -F "No respondas la objeción"
