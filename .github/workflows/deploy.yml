@@ -38,9 +38,9 @@ jobs:
       - name: Verify public deploy
         run: |
           curl --fail --silent --show-error --location \
-            https://objeccionesbasicas.peterestela.com/deploy-marker.txt \
+            https://5objeccionesbasicas.peterestela.com/deploy-marker.txt \
             | tee /tmp/deploy-marker.txt
           grep -F "${{ github.sha }}" /tmp/deploy-marker.txt
           curl --fail --silent --show-error --location --compressed \
-            https://objeccionesbasicas.peterestela.com/ \
+            https://5objeccionesbasicas.peterestela.com/ \
             | grep -F "No respondas la objeción"
