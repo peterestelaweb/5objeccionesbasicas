@@ -19,4 +19,6 @@ Entrenador de objeciones (web estática).
 2. `git commit` + `git push` a `main`.
 3. Comprobar que `https://5objeccionesbasicas.peterestela.com/deploy-marker.txt` muestra el commit nuevo (el workflow lo verifica solo).
 
-La contraseña FTP solo está en los secrets de GitHub (y en cPanel). No se guarda aquí.
+La contraseña FTP solo está en el secret `FTP_PASSWORD` de GitHub y en cPanel (la puso Peter el 19-11-2026). `~/.config/objeccionesbasicas/ftp-pass` ya NO coincide: para cambiarla, Peter pega el mismo valor en cPanel → Change Password y en `gh secret set FTP_PASSWORD -R peterestelaweb/5objeccionesbasicas`.
+
+Publicada y verificada el 19-11-2026: run 44472009830, `deploy-marker.txt` con commit 84bfc57.
